@@ -1,0 +1,30 @@
+package org.example.authclient.response;
+
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.UUID;
+
+@Data
+@Builder
+@Schema(description = "Authentication response containing JWT tokens and user info")
+public class AuthResponse {
+    @Schema(description = "JWT access token", example = "eyJhbGciOiJIUzI1NiIs...")
+    private String accessToken;
+
+    @Schema(description = "JWT refresh token", example = "eyJhbGciOiJIUzI1NiIs...")
+    private String refreshToken;
+
+    @Schema(description = "User ID", example = "123")
+    private UUID userId;
+
+    @Schema(description = "Username", example = "john_doe")
+    private String username;
+
+    @Schema(description = "User roles", example = "['USER']")
+    private String[] roles;
+}
+

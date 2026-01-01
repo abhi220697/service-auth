@@ -1,0 +1,36 @@
+services:
+  auth-postgres:
+    image: postgres:15
+    container_name: auth-postgres
+    environment:
+      POSTGRES_DB: authdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - auth_postgres_data:/var/lib/postgresql/data
+
+  auth-server:
+    build:
+      context: ./auth-server
+      dockerfile: Dockerfile
+    container_name: auth-server
+    depends_on:
+      - auth-postgres
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://auth-postgres:5432/authdb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
+      # JWT configs (NO file path here)
+      AUTH_JWT_ISSUER: service-auth
+      AUTH_JWT_TOKEN_VALIDITY_SECONDS: 300
+
+      # User-service URL
+      USER_SERVICE_URL: http://user-server:8080
+
+volumes:
+  auth_postgres_data:
